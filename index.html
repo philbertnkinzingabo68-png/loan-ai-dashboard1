@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Risk Intelligence</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --primary: #00e5ff;          /* Cyan */
+    --primary-light: #18ffff;    /* Lighter Cyan */
+    --secondary: #ffd700;        /* Gold */
+    --success: #00ffc6;          /* Cyan-green for success */
+    --danger: #ff3b3b;           /* Red for danger */
+    --warning: #ffb703;          /* Gold warning */
+    --dark: #000000;              /* Black background */
+    --light: #f5f5f5;            /* Light text */
+    --glass: rgba(0, 0, 0, 0.65);
+    --glass-border: rgba(255, 215, 0, 0.25);
+    --shadow: 0 8px 32px rgba(0, 229, 255, 0.25);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: var(--light);
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.logo-icon {
+    background: linear-gradient(135deg, var(--primary), var(--success));
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+h1 {
+    font-size: 2.8rem;
+    background: linear-gradient(90deg, #fff, var(--success));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Main Card */
+.main-card {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    padding: 30px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+/* Tabs */
+.tabs-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 8px;
+    max-width: 400px;
+}
+
+.tab {
+    flex: 1;
+    padding: 16px 24px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+}
+
+.input-container {
+    position: relative;
+}
+
+input, select {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.input-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Buttons */
+.btn {
+    padding: 18px 32px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    margin-top: 20px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(67, 97, 238, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Result Cards */
+.result-card {
+    display: none;
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 5px solid var(--primary);
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-card.approved {
+    border-left-color: var(--success);
+    background: linear-gradient(135deg, rgba(76, 201, 240, 0.1), rgba(76, 201, 240, 0.05));
+}
+
+.result-card.rejected {
+    border-left-color: var(--danger);
+    background: linear-gradient(135deg, rgba(247, 37, 133, 0.1), rgba(247, 37, 133, 0.05));
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.result-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+.approved .result-icon {
+    background: rgba(76, 201, 240, 0.2);
+    color: var(--success);
+}
+
+.rejected .result-icon {
+    background: rgba(247, 37, 133, 0.2);
+    color: var(--danger);
+}
+
+.result-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.detail-item {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+/* Batch Upload */
+.upload-area {
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 60px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background: rgba(67, 97, 238, 0.05);
+}
+
+.upload-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.file-input {
+    display: none;
+}
+
+/* Batch Results */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    padding: 25px;
+    border-radius: 16px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.total .stat-value { color: var(--primary); }
+.approved-stat .stat-value { color: var(--success); }
+.rejected-stat .stat-value { color: var(--danger); }
+
+/* Table */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.results-table th {
+    padding: 18px 15px;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.07);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.results-table td {
+    padding: 16px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.results-table tr:last-child td {
+    border-bottom: none;
+}
+
+.results-table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: rgba(76, 201, 240, 0.2);
+    color: var(--success);
+}
+
+.badge-danger {
+    background: rgba(247, 37, 133, 0.2);
+    color: var(--danger);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 50px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-card {
+        padding: 20px;
+    }
+    
+    .tabs-container {
+        max-width: 100%;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Loading Animation */
+.loader {
+    display: none;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+/* === FIX FOR ALL DROPDOWNS === */
+
+/* 1. Style the SELECT element itself (all dropdowns) */
+.input-container select {
+    width: 100%;
+    padding: 16px 50px 16px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white !important;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* 2. Custom dropdown arrow for ALL selects */
+.input-container select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-size: 12px;
+}
+
+/* 3. Style ALL OPTION elements in ALL dropdowns */
+.input-container select option {
+    background-color: #1a1a2e !important;
+    color: white !important;
+    padding: 12px 20px !important;
+    font-size: 14px;
+}
+
+/* 4. Hover state for ALL options */
+.input-container select option:hover,
+.input-container select option:focus {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    color: white !important;
+}
+
+/* 5. Selected option in ALL dropdowns */
+.input-container select option:checked,
+.input-container select option:checked:focus {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+    color: white !important;
+}
+
+/* 6. Focus state for ALL dropdowns */
+.input-container select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* 7. Browser-specific fixes for ALL dropdowns */
+
+/* Firefox */
+@-moz-document url-prefix() {
+    .input-container select {
+        color: white !important;
+        text-shadow: 0 0 0 white;
+    }
+    
+    .input-container select option {
+        background-color: #1a1a2e !important;
+        color: white !important;
+    }
+}
+
+/* Safari/Chrome */
+@media not all and (min-resolution:.001dpcm) {
+    @supports (-webkit-appearance:none) {
+        .input-container select {
+            color: white !important;
+        }
+        
+        .input-container select option {
+            background-color: #1a1a2e !important;
+            color: white !important;
+        }
+    }
+}
+
+/* Edge */
+@supports (-ms-ime-align:auto) {
+    .input-container select {
+        color: white !important;
+    }
+    
+    .input-container select option {
+        background-color: #1a1a2e !important;
+        color: white !important;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1>LoanRisk Intelligence</h1>
+        </div>
+        <p class="subtitle">AI-powered loan repayment prediction system with 95%+ accuracy</p>
+    </header>
+
+    <!-- Main Card -->
+    <div class="main-card">
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <button class="tab active" onclick="switchTab(event, 'single')">
+                <i class="fas fa-user"></i> Single Application
+            </button>
+            <button class="tab" onclick="switchTab(event, 'batch')">
+                <i class="fas fa-users"></i> Batch Processing
+            </button>
+        </div>
+
+        <!-- Single Prediction Tab -->
+        <div id="single" class="tab-content active">
+            <form id="singleForm">
+                <div class="form-grid">
+                    <!-- Personal Info -->
+                    <div class="form-group">
+                        <label><i class="fas fa-user-tag"></i> Full Name</label>
+                        <div class="input-container">
+                            <input type="text" name="name" required placeholder="Enter full name">
+                            <div class="input-icon"><i class="fas fa-user"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-venus-mars"></i> Gender</label>
+                        <div class="input-container">
+                            <select name="gender" required>
+                                <option value="">Select gender</option>
+                                <option>Female</option>
+                                <option>Male</option>
+                                <option>Other</option>
+                            </select>
+                            <div class="input-icon"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Info -->
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill-wave"></i> Annual Income (RWF)</label>
+                        <div class="input-container">
+                            <input type="number" name="annual_income" required placeholder="10000">
+                            <div class="input-icon"><i class="fas fa-wallet"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-percentage"></i> Debt to Income Ratio</label>
+                        <div class="input-container">
+                            <input type="number" step="0.01" name="debt_to_income_ratio" required placeholder="0.52">
+                            <div class="input-icon"><i class="fas fa-balance-scale"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-credit-card"></i> Credit Score</label>
+                        <div class="input-container">
+                            <input type="number" name="credit_score" required placeholder="540">
+                            <div class="input-icon"><i class="fas fa-chart-line"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Loan Details -->
+                    <div class="form-group">
+                        <label><i class="fas fa-hand-holding-usd"></i> Loan Amount (RWF)</label>
+                        <div class="input-container">
+                            <input type="number" name="loan_amount" required placeholder="33000">
+                            <div class="input-icon"><i class="fas fa-coins"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-percent"></i> Interest Rate (%)</label>
+                        <div class="input-container">
+                            <input type="number" step="0.01" name="interest_rate" required placeholder="6.0">
+                            <div class="input-icon"><i class="fas fa-chart-pie"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Info -->
+                    <div class="form-group">
+                        <label><i class="fas fa-heart"></i> Marital Status</label>
+                        <div class="input-container">
+                            <select name="marital_status" required>
+                                <option value="">Select status</option>
+                                <option>Divorced</option>
+                                <option>Married</option>
+                                <option>Single</option>
+                                <option>Widowed</option>
+                            </select>
+                            <div class="input-icon"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-graduation-cap"></i> Education Level</label>
+                        <div class="input-container">
+                            <select name="education_level" required>
+                                <option value="">Select education</option>
+                                <option>High School</option>
+                                <option>Bachelor's</option>
+                                <option>Master's</option>
+                                <option>PhD</option>
+                                <option>Other</option>
+                            </select>
+                            <div class="input-icon"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-briefcase"></i> Employment Status</label>
+                        <div class="input-container">
+                            <select name="employment_status" required>
+                                <option value="">Select employment</option>
+                                <option>Employed</option>
+                                <option>Unemployed</option>
+                                <option>Self-employed</option>
+                                <option>Retired</option>
+                                <option>Student</option>
+                            </select>
+                            <div class="input-icon"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-bullseye"></i> Loan Purpose</label>
+                        <div class="input-container">
+                            <select name="loan_purpose" required>
+                                <option value="">Select purpose</option>
+                                <option>Business</option>
+                                <option>Car</option>
+                                <option>Debt consolidation</option>
+                                <option>Education</option>
+                                <option>Home</option>
+                                <option>Medical</option>
+                                <option>Other</option>
+                                <option>Vacation</option>
+                            </select>
+                            <div class="input-icon"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-trophy"></i> Grade/Subgrade</label>
+                        <div class="input-container">
+                            <select name="grade_subgrade" required>
+                                <option value="">Select grade</option>
+                                <option>A1</option><option>A2</option><option>A3</option><option>A4</option><option>A5</option>
+                                <option>B1</option><option>B2</option><option>B3</option><option>B4</option><option>B5</option>
+                                <option>C1</option><option>C2</option><option>C3</option><option>C4</option><option>C5</option>
+                                <option>D1</option><option>D2</option><option>D3</option><option>D4</option><option>D5</option>
+                                <option>E1</option><option>E2</option><option>E3</option><option>E4</option><option>E5</option>
+                                <option>F1</option><option>F2</option><option>F3</option><option>F4</option><option>F5</option>
+                            </select>
+                            <div class="input-icon"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-brain"></i> Analyze Loan Risk
+                </button>
+            </form>
+
+            <!-- Single Result -->
+            <div id="singleResult" class="result-card"></div>
+        </div>
+
+        <!-- Batch Prediction Tab -->
+        <div id="batch" class="tab-content">
+            <div class="btn btn-secondary" onclick="downloadSampleCSV()" style="margin-bottom: 25px;">
+                <i class="fas fa-file-download"></i> Download Sample CSV Template
+            </div>
+
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Upload Your Batch File</h3>
+                <p>Drag & drop or click to upload CSV, Excel, or TXT files</p>
+                <p style="color: rgba(255, 255, 255, 0.5); margin-top: 10px;">
+                    Supports: .csv, .xlsx, .xls, .txt
+                </p>
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.txt" class="file-input" onchange="handleFileUpload()">
+            </div>
+
+            <div class="loader" id="batchLoader"></div>
+
+            <!-- Batch Results -->
+            <div id="batchResults" style="display:none">
+                <div class="stats-grid">
+                    <div class="stat-card total">
+                        <div class="stat-value" id="totalCount">0</div>
+                        <div class="stat-label">Total Applications</div>
+                    </div>
+                    <div class="stat-card approved-stat">
+                        <div class="stat-value" id="approvedCount">0</div>
+                        <div class="stat-label">Will Pay Back</div>
+                    </div>
+                    <div class="stat-card rejected-stat">
+                        <div class="stat-value" id="rejectedCount">0</div>
+                        <div class="stat-label">Will Not Pay Back</div>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Income</th>
+                                <th>Credit Score</th>
+                                <th>Loan Amount</th>
+                                <th>Employment</th>
+                                <th>Prediction</th>
+                                <th>Probability</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 LoanRisk Intelligence. Powered by AI/ML technology.</p>
+        <p style="margin-top: 5px; font-size: 12px; color: rgba(255, 255, 255, 0.3);">
+            This system predicts loan repayment probability with advanced machine learning algorithms
+        </p>
+    </footer>
+</div>
+
+<script>
+// Tab Switching
+function switchTab(event, tabName) {
+    // Update tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+    
+    // Update tab content
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(tabName).classList.add('active');
+}
+
+// Single Prediction
+document.getElementById('singleForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    
+    // Convert numeric fields
+    ['annual_income', 'debt_to_income_ratio', 'credit_score', 'loan_amount', 'interest_rate']
+        .forEach(field => {
+            data[field] = parseFloat(data[field]);
+        });
+    
+    const resultDiv = document.getElementById('singleResult');
+    resultDiv.style.display = 'block';
+    resultDiv.className = 'result-card loading';
+    resultDiv.innerHTML = `
+        <div class="result-header">
+            <div class="loader"></div>
+            <h3>Analyzing application...</h3>
+        </div>
+    `;
+    
+    try {
+        const response = await fetch('http://127.0.0.1:8000/predict/single', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Prediction failed');
+        }
+        
+        const result = await response.json();
+        const isApproved = result.prediction === 1;
+        const probability = (result.probability * 100).toFixed(2);
+        
+        resultDiv.className = `result-card ${isApproved ? 'approved' : 'rejected'}`;
+        resultDiv.innerHTML = `
+            <div class="result-header">
+                <div class="result-icon">
+                    <i class="fas ${isApproved ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                </div>
+                <div>
+                    <h2>${data.name}'s Loan Application</h2>
+                    <p>${isApproved ? 'Low Risk - Recommended for Approval' : 'High Risk - Not Recommended'}</p>
+                </div>
+            </div>
+            
+            <div class="result-details">
+                <div class="detail-item">
+                    <strong>Prediction</strong>
+                    <h3 style="color: ${isApproved ? 'var(--success)' : 'var(--danger)'}; margin-top: 5px;">
+                        ${isApproved ? 'Will Pay Back' : 'Will Not Pay Back'}
+                    </h3>
+                </div>
+                <div class="detail-item">
+                    <strong>Confidence Level</strong>
+                    <h3 style="margin-top: 5px;">${probability}%</h3>
+                </div>
+                <div class="detail-item">
+                    <strong>Risk Score</strong>
+                    <h3 style="margin-top: 5px;">${100 - parseFloat(probability)}/100</h3>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;">
+                <strong>Key Factors:</strong>
+                <p style="margin-top: 10px; color: rgba(255, 255, 255, 0.7);">
+                    ${isApproved ? 
+                        'Good credit profile with stable income and manageable debt ratio.' :
+                        'High debt-to-income ratio combined with other risk factors increases default probability.'
+                    }
+                </p>
+            </div>
+        `;
+        
+        // Scroll to result
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+    } catch (error) {
+        resultDiv.className = 'result-card rejected';
+        resultDiv.innerHTML = `
+            <div class="result-header">
+                <div class="result-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div>
+                    <h2>Error Processing Request</h2>
+                    <p>${error.message}</p>
+                </div>
+            </div>
+        `;
+    }
+});
+
+// Batch Prediction
+async function handleFileUpload() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert("Please select a file first");
+        return;
+    }
+    
+    // Show loader
+    const loader = document.getElementById('batchLoader');
+    const batchResults = document.getElementById('batchResults');
+    loader.style.display = 'block';
+    batchResults.style.display = 'none';
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('http://127.0.0.1:8000/predict/batch', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Batch prediction failed');
+        }
+        
+        const result = await response.json();
+        
+        // Update summary
+        document.getElementById('totalCount').textContent = result.total_applications;
+        document.getElementById('approvedCount').textContent = result.approved_applications;
+        document.getElementById('rejectedCount').textContent = 
+            result.total_applications - result.approved_applications;
+        
+        // Update table
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+        
+        result.results.forEach(row => {
+            const tr = document.createElement('tr');
+            const isApproved = row.prediction === 'Will Pay Back';
+            const probability = row.probability != null ? (row.probability * 100).toFixed(1) : '0';
+            
+            tr.innerHTML = `
+                <td><strong>${row.name || 'N/A'}</strong></td>
+                <td>RWF ${row.annual_income != null ? Number(row.annual_income).toLocaleString() : 'N/A'}</td>
+                <td>${row.credit_score != null ? row.credit_score : 'N/A'}</td>
+                <td>RWF ${row.loan_amount != null ? Number(row.loan_amount).toLocaleString() : 'N/A'}</td>
+                <td>${row.employment_status || 'N/A'}</td>
+                <td>
+                    <span class="badge ${isApproved ? 'badge-success' : 'badge-danger'}">
+                        ${isApproved ? 'Will Pay Back' : 'Will Not Pay Back'}
+                    </span>
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="flex: 1; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px;">
+                            <div style="width: ${probability}%; height: 100%; background: ${isApproved ? 'var(--success)' : 'var(--danger)'}; border-radius: 3px;"></div>
+                        </div>
+                        <span>${probability}%</span>
+                    </div>
+                </td>
+            `;
+            
+            tableBody.appendChild(tr);
+        });
+        
+        // Show results
+        loader.style.display = 'none';
+        batchResults.style.display = 'block';
+        
+        // Scroll to results
+        batchResults.scrollIntoView({ behavior: 'smooth' });
+        
+    } catch (error) {
+        loader.style.display = 'none';
+        alert('Error: ' + error.message);
+        console.error(error);
+    }
+}
+
+// Download sample CSV
+function downloadSampleCSV() {
+    window.location.href = 'http://127.0.0.1:8000/sample';
+}
+
+// Drag and drop functionality
+const uploadArea = document.querySelector('.upload-area');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'var(--primary)';
+    uploadArea.style.background = 'rgba(67, 97, 238, 0.1)';
+});
+
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+    uploadArea.style.background = 'transparent';
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+    uploadArea.style.background = 'transparent';
+    
+    if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        handleFileUpload();
+    }
+});
+</script>
+</body>
+</html>
